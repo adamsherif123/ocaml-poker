@@ -1,0 +1,61 @@
+open Poker
+
+let show_card c =
+  let r = match c.rank with
+    | Two->"2"|Three->"3"|Four->"4"|Five->"5"|Six->"6"|Seven->"7"|Eight->"8"
+    | Nine->"9"|Ten->"T"|Jack->"J"|Queen->"Q"|King->"K"|Ace->"A" in
+  let s = match c.suit with Clubs->"♣"|Diamonds->"♦"|Hearts->"♥"|Spades->"♠" in
+  r ^ s
+
+let show_hand h = String.concat " " (List.map show_card h)
+
+let rec loop st =
+  match st.stage with
+  | Predeal ->
+      let st = Result.get_ok (make_move st Call) in
+      Printf.printf "Dealt!\nYour hand: %s\nPot: %d\n\n"
+        (show_hand st.p1) st.pot;
+      loop st
+  | Betting ->
+      Printf.printf "Action (fold/call/bet N): ";
+      let line = read_line () in
+      let mv =
+        if line = "fold" then Fold
+        else if line = "call" then Call
+        else if String.length line >= 3 && String.sub line 0 3 = "bet"
+        then
+          let n =
+            try int_of_string (String.trim (String.sub line 3 (String.length line - 3)))
+            with _ -> 0
+          in Bet n
+        else Call
+      in
+      let st = Result.get_ok (make_move st mv) in
+      Printf.printf "Pot: %d  To_call: %d\n" st.pot st.to_call;
+      if st.stage = Finished then loop st else
+      let st =
+        if st.stage = Betting then
+          let mvb = choose_move st in
+          Printf.printf "Bot plays: %s\n"
+            (match mvb with Fold->"Fold"|Call->"Call"|Bet n->"Bet " ^ string_of_int n);
+          Result.get_ok (make_move st mvb)
+        else st
+      in
+      loop st
+  | Showdown ->
+      Printf.printf "Showdown!\nYou: %s\nBot: %s\n"
+        (show_hand st.p1) (show_hand st.p2);
+      let st = Result.get_ok (make_move st Call) in
+      loop st
+  | Finished ->
+      begin match st.decision with
+      | Winner P1 -> Printf.printf "You win! Pot=%d\n" st.pot
+      | Winner P2 -> Printf.printf "Bot wins! Pot=%d\n" st.pot
+      | _ -> Printf.printf "Stalemate.\n"
+      end;
+      st |> ignore
+
+let () =
+  match create () with
+  | Error _ -> prerr_endline "Failed to create game."
+  | Ok st -> ignore (loop st)

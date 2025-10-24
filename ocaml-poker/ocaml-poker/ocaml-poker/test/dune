@@ -1,0 +1,4 @@
+(test
+ (name poker_test)
+ (modules poker_test)
+ (libraries poker ounit2))

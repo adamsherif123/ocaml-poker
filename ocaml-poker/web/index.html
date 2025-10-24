@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Texas Hold'em — 2 Players</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+      :root { --bg:#0b1220; --panel:#111a2e; --chip:#182440; --text:#e8eef6; --muted:#9fb0d1; --accent:#2c3a63; }
+      * { box-sizing: border-box; }
+      body { background:var(--bg); color:var(--text); margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+      .wrap { max-width: 980px; margin: 32px auto; padding: 0 16px; }
+      .card { background:var(--panel); border-radius:16px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,.35); }
+      h1 { margin:0 0 16px; font-size:24px; }
+      .names { display:flex; gap:8px; margin-bottom:12px; flex-wrap: wrap; align-items:center; }
+      .names input { padding:10px 12px; border-radius:12px; border:1px solid var(--accent); background:#0f1628; color:var(--text); }
+      .names button { padding:10px 14px; border:0; border-radius:12px; cursor:pointer; background:var(--accent); color:#fff; }
+      .pill { background:var(--chip); padding:8px 12px; border-radius:999px; font-size:14px; color:var(--muted); }
+      .row { display:flex; gap:12px; align-items:center; flex-wrap: wrap; }
+      .table { display:grid; grid-template-rows:auto auto auto auto; gap:14px; }
+      .section-title { font-size:13px; color:var(--muted); margin-right:8px; }
+
+      /* Playing cards (CSS) */
+      .cards { display:flex; gap:10px; align-items:center; }
+      .playing-card, .card-back {
+        width:72px; height:100px; border-radius:10px; box-shadow:0 3px 10px rgba(0,0,0,.35);
+        background:#fff; color:#111; display:flex; flex-direction:column; justify-content:space-between;
+        padding:6px; position:relative;
+      }
+      .playing-card.red { color:#b31c1c; }
+      .rank { font-weight:700; font-size:18px; line-height:1; }
+      .suit { font-size:18px; line-height:1; align-self:flex-end; }
+      .pip { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:26px; opacity:.12; }
+      .card-back { background:linear-gradient(135deg, #2f3d6e, #1b2443); color:#fff; justify-content:center; align-items:center; }
+      .card-back::after { content:"♦"; font-size:28px; opacity:.5; }
+
+      .seats { display:flex; justify-content:space-between; gap:16px; }
+      .seat { flex:1; background:#0e1730; border-radius:14px; padding:12px; }
+      .seat h3 { margin:0 0 8px; font-size:15px; color:var(--muted); }
+      .actions { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+      .actions button { padding:10px 14px; border:0; border-radius:12px; cursor:pointer; background:var(--accent); color:white; }
+      .actions input[type="number"]{ width:100px; padding:10px; border-radius:10px; border:1px solid var(--accent); background:#0f1628; color:var(--text); }
+      .seat .reveal { margin-top:10px; padding:10px 14px; border:0; border-radius:12px; cursor:pointer; background:var(--accent); color:white; }
+      .seat .reveal:hover, .actions button:hover, .names button:hover { filter:brightness(1.1); }
+      .footer { opacity:.6; font-size:12px; margin-top:10px; }
+      .warn { color:#ffb4a3; }
+
+      @media (max-width: 640px) { .playing-card, .card-back { width:56px; height:78px; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h1>Texas Hold'em — 2 Players (no raises)</h1>
+
+        <div class="names">
+          <input id="p1" placeholder="Player 1" />
+          <input id="p2" placeholder="Player 2" />
+          <button id="start">Start Hand</button>
+          <span id="msg" class="warn"></span>
+        </div>
+
+        <div id="app"></div>
+
+        <div class="footer">
+          If you don’t see changes, rebuild then refresh: <code>dune build web/app.bc.js</code>
+        </div>
+      </div>
+    </div>
+    <script defer src="../_build/default/web/app.bc.js"></script>
+  </body>
+</html>

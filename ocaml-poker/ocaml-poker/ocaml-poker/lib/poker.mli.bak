@@ -1,0 +1,48 @@
+type rank = Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Jack|Queen|King|Ace
+type suit = Clubs|Diamonds|Hearts|Spades
+type card = { rank: rank; suit: suit }
+
+type player = P1 | P2
+type stage = Predeal | Deal | Betting | Showdown | Finished
+
+type decision =
+  | In_progress of { whose_turn: player }
+  | Winner of player
+  | Stalemate
+
+type move = Fold | Call | Bet of int
+
+type t = {
+  deck: card list;
+  p1: card list; p2: card list;
+  pot: int; to_call: int;
+  stage: stage; decision: decision;
+}
+
+module Create_error : sig
+  type t = | Invalid_deck
+end
+
+val create : unit -> (t, Create_error.t) result
+
+module Move_error : sig
+  type t = | Game_over | Illegal_move
+end
+
+val make_move : t -> move -> (t, Move_error.t) result
+
+type hand_rank =
+  | High_card of int list
+  | Pair of int * int list
+  | Two_pair of int * int * int
+  | Three_kind of int * int list
+  | Straight of int
+  | Flush of int list
+  | Full_house of int * int
+  | Four_kind of int * int
+  | Straight_flush of int
+
+val eval_hand : card list -> hand_rank
+val compare_hands : card list -> card list -> int  (* >0 if first wins *)
+
+val choose_move : t -> move  (* naive bot *)

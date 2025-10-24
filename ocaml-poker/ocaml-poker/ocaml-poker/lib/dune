@@ -1,0 +1,4 @@
+(library
+ (name poker)
+ (modules poker)
+ (flags (:standard -warn-error -A)))

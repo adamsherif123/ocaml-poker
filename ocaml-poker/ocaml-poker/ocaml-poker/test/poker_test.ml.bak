@@ -1,0 +1,30 @@
+open OUnit2
+open Poker
+
+let mk_test_eval _ =
+  let hand_high =
+    [ {rank=Ace; suit=Spades}; {rank=Seven; suit=Clubs};
+      {rank=Four; suit=Hearts}; {rank=Three; suit=Diamonds};
+      {rank=Ten; suit=Clubs} ] in
+  match eval_hand hand_high with
+  | High_card _ -> assert_bool "ok" true
+  | _ -> assert_failure "expected High_card"
+
+let mk_test_compare _ =
+  let pair_hand =
+    [ {rank=King; suit=Spades}; {rank=King; suit=Clubs};
+      {rank=Four; suit=Hearts}; {rank=Three; suit=Diamonds};
+      {rank=Ten; suit=Clubs} ] in
+  let high_hand =
+    [ {rank=Ace; suit=Spades}; {rank=Seven; suit=Clubs};
+      {rank=Four; suit=Hearts}; {rank=Three; suit=Diamonds};
+      {rank=Ten; suit=Clubs} ] in
+  assert_bool "pair beats high card" (compare_hands pair_hand high_hand > 0)
+
+let suite =
+  "poker" >::: [
+    "eval_high" >:: mk_test_eval;
+    "compare"   >:: mk_test_compare;
+  ]
+
+let () = run_test_tt_main suite
