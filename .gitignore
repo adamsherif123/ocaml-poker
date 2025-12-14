@@ -1,0 +1,26 @@
+# OCaml / dune
+_build/
+*.cmi
+*.cmo
+*.cmx
+*.cmxa
+*.a
+*.o
+*.exe
+*.byte
+*.native
+*.merlin
+
+# opam local switch
+_opam/
+.opam-switch/
+
+# OS/editor noise
+.DS_Store
+.vscode/
+.idea/
+
+# env / secrets
+web/firebase-config.js
+**/firebase-config.js
+*.env
